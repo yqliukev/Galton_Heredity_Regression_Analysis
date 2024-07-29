@@ -1,0 +1,22 @@
+# Data Overview
+
+The data from Galton's analysis can be accessed through the *HistData* package. 
+```{r}
+library(tidyverse)
+library(HistData)
+data("GaltonFamilies")
+
+head(GaltonFamilies)
+```
+As shown, the data contains information on the heights of the father, mother, and each children. There is also some additional information and aggregation with the gender and average height of the parents.
+
+## Splitting Gender
+One of the defining characteristics that can be examined is the effect of the child's gender on the level of correlation with each parent. The dataset will be split into subsets with sons and daughters. To avoid an inaccurate representation of the standard deviation in the heights of parents, there should be a 1:1 correspondence of the height of parents to their children of each height. This can be done either through averaging the height of the children, or making a random sampling. Here the average will be taken.
+```{r}
+son_data <- GaltonFamilies %>% filter(gender == "male")
+daughter_data <- GaltonFamilies %>% filter(gender == "female")
+```
+
+Here is a summary of the data for sons:
+```{r}
+
