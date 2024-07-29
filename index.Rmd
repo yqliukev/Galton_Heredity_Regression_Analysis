@@ -1,0 +1,9 @@
+# Preface
+
+This analysis uses the heights data collected and studied by Francis Galton to try to understand heredity. It will essentially follow the steps that Galton used, and investigate the correlation between variables in the dataset.
+
+## Goals
+- Determine correlation between the heights of parents and children
+- Make connections between variables allowing for a bivariate normal distribution
+- Create a multivariate linear regression model to predict a child's height based on the height of their parents
+- Evaluate the accuracy of the model, accounting for potential confounding
