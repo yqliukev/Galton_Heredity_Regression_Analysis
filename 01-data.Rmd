@@ -1,6 +1,7 @@
 # Data Overview
 
 The data from Galton's analysis can be accessed through the *HistData* package. 
+
 ```{r}
 library(tidyverse)
 library(HistData)
@@ -11,12 +12,48 @@ head(GaltonFamilies)
 As shown, the data contains information on the heights of the father, mother, and each children. There is also some additional information and aggregation with the gender and average height of the parents.
 
 ## Splitting Gender
-One of the defining characteristics that can be examined is the effect of the child's gender on the level of correlation with each parent. The dataset will be split into subsets with sons and daughters. To avoid an inaccurate representation of the standard deviation in the heights of parents, there should be a 1:1 correspondence of the height of parents to their children of each height. This can be done either through averaging the height of the children, or making a random sampling. Here the average will be taken.
+One of the defining characteristics that can be examined is the effect of the child's gender on the level of correlation with each parent. The analysis will account for and investigate this effect. To do so, the dataset will be split into subsets with sons and daughters.
+To avoid an inaccurate representation of the standard deviation in the heights of parents, there should be a 1:1 correspondence of the height of parents to their children of each height. This can be done either through averaging the height of the children, or making a random sampling. In this analysis the average of the height of children of a particular gender will be taken.
+
 ```{r}
-son_data <- GaltonFamilies %>% filter(gender == "male")
-daughter_data <- GaltonFamilies %>% filter(gender == "female")
+son_data <- GaltonFamilies %>%
+  filter(gender == "male") %>% 
+  group_by(family) %>%
+  mutate(avgSon = mean(childHeight)) %>% 
+  slice_sample(n = 1) %>%
+  ungroup() %>% 
+  select(father, mother, midparentHeight, avgSon)
+  
+daughter_data <- GaltonFamilies %>% 
+  filter(gender == "female") %>%
+  group_by(family) %>%
+  mutate(avgDaughter = mean(childHeight)) %>% 
+  slice_sample(n = 1) %>%
+  ungroup() %>% 
+  select(father, mother, midparentHeight, avgDaughter)
 ```
 
+## First Looks
 Here is a summary of the data for sons:
 ```{r}
+son_data %>% 
+  summarize(mean(father), sd(father), mean(mother), sd(mother),
+            mean(avgSon), sd(avgSon))
+```
+
+Add the corresponding summary for daughters:
+```{r}
+daughter_data %>%
+  summarize(mean(father), sd(father), mean(mother), sd(mother),
+            mean(avgDaughter), sd(avgDaughter))
+```
+
+We will be examining the linear relationship between variables, so it is intuitive to first examine potential relationships visually through graphs. This analysis will look at the effects of each parent separately. We are interested in finding out if either parent has a stronger effect on the heights of their children of both genders.
+Later, We will also take a look at the average height of the parents to see if heredity is more of a combined effort of the parents.
+
+Father to sons:
+```{r}
+son_data %>% ggplot(aes(father, avgSon)) +
+  geo_point(alpha = 0.5)
+```
 
