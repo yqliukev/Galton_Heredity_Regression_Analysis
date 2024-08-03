@@ -5,6 +5,7 @@ The data from Galton's analysis can be accessed through the *HistData* package.
 ```{r}
 library(tidyverse)
 library(HistData)
+library(gridExtra)
 data("GaltonFamilies")
 
 head(GaltonFamilies)
@@ -51,9 +52,26 @@ daughter_data %>%
 We will be examining the linear relationship between variables, so it is intuitive to first examine potential relationships visually through graphs. This analysis will look at the effects of each parent separately. We are interested in finding out if either parent has a stronger effect on the heights of their children of both genders.
 Later, We will also take a look at the average height of the parents to see if heredity is more of a combined effort of the parents.
 
-Father to sons:
+Here are the grids for sons:
 ```{r}
-son_data %>% ggplot(aes(father, avgSon)) +
-  geo_point(alpha = 0.5)
+father_plot <- son_data %>% ggplot(aes(father, avgSon)) +
+  geom_point(alpha = 0.5) + coord_fixed()
+mother_plot <- son_data %>% ggplot(aes(mother, avgSon)) +
+  geom_point(alpha = 0.5) + coord_fixed()
+mid_plot <- son_data %>% ggplot(aes(midparentHeight, avgSon)) +
+  geom_point(alpha = 0.5) + coord_fixed()
+grid.arrange(father_plot, mother_plot, mid_plot, ncol = 3)
 ```
 
+And for daughters:
+```{r}
+father_plot <- son_data %>% ggplot(aes(father, avgSon)) +
+  geom_point(alpha = 0.5) + coord_fixed()
+mother_plot <- son_data %>% ggplot(aes(mother, avgSon)) +
+  geom_point(alpha = 0.5) + coord_fixed()
+mid_plot <- son_data %>% ggplot(aes(midparentHeight, avgSon)) +
+  geom_point(alpha = 0.5) + coord_fixed()
+grid.arrange(father_plot, mother_plot, mid_plot, ncol = 3)
+```
+
+From these plots we can see some level of correlation between the heights of the parent and the height of the child. Interestingly, we can expect the average parent height to have particularly strong correlation with the height of the child. This is good, as it aligns with our general understanding of heredity. 
